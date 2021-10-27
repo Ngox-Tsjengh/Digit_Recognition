@@ -18,8 +18,8 @@ class FullyConnectedLayer(object):
         start_time = time.time()
 
         self.input = input
-        self.output = numpy.dot(self.input, self.weight) + self.bias
-        return self.output
+        output = numpy.dot(self.input, self.weight) + self.bias
+        return output
         
     def backward(self, top_diff):
     #Back propagation of FullyConnectedLayer
@@ -42,3 +42,21 @@ class FullyConnectedLayer(object):
 
     def save_param(self):
         return self.weight, self.bias
+
+
+class ActivationLayer(object):
+    def forward(self, input):
+        start_time = time.time()
+        self.input = input
+        output = numpy.maxium(self.input, 0)
+        return output
+
+    def backward(self, top_diff):
+        Act = self.input
+        Act[Act > 0] = 1
+        Act[Act < 0] = 0
+        bottom_diff = numpy.multiply(b, top_diff)
+        return bottom_diff
+
+class LossLayer(object):
+    def forward
