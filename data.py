@@ -7,7 +7,6 @@ TRAIN_LABEL = "train-labels.idx1-ubyte"
 TEST_DATA = "t10k-images.idx3-ubyte"
 TEST_LABEL = "t10k-labels.idx1-ubyte"
 
-
 def load_mnist(self, file_dir, is_image = "True"):
 #Load MNIST data
     # 1 Read binary data
@@ -32,13 +31,19 @@ def load_mnist(self, file_dir, is_image = "True"):
 
 def load_data(self):
 #Load all data(images and labels) from MNIST files 
+# Read files and Append lables to images
     print('Loading MNIST data')
-    # 1 Read files
     train_images = self.load_mnist(os.path.join(MNIST_DIR, TRAIN_DATA), True)
     train_labels = self.load_mnist(os.path.join(MNIST_DIR, TRAIN_LABEL), False)
+    self.train_data = numpy.append(train_images, train_labels, axis=1)
+
     test_images = self.load_mnist(os.path.join(MNIST_DIR, TEST_DATA), True)
     test_labels = self.load_mnist(os.path.join(MNIST_DIR, TEST_LABEL), False)
-
-    # 2 Append lables to images
-    self.train_data = numpy.append(train_images, train_labels, axis=1)
     self.test_data = numpy.append(test_images, test_labels, axis=1)
+
+
+def shuffle_data(self):
+#shuffle data for cross validation
+    print('Randomly shuffling data for cross validation ')
+    numpy.random.shuffle(self.train_data)
+
