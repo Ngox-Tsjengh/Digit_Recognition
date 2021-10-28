@@ -59,4 +59,21 @@ class ActivationLayer(object):
         return bottom_diff
 
 class LossLayer(object):
-    def forward
+    def forward(self, input):
+        input_max = numpy.max(input, axis=1, keepdims=True)
+        input_exp = numpy.exp(input - input_max)
+        sum = numpy.sum(input_exp, axis = 1)
+        all_sum = numpy.tile(sum, (10,1))
+        self.probability = input_exp / sum.T
+        return self
+
+    def get_loss(self, label):
+        self.batch_size = self.probability.shape[0]
+        self.label_onehot = numpy.zeros_like(self.probability)
+        self.label_onehot[numpy.arange(self.batch_size), label] = 1.0
+        loss = - numpy.sum(self.label_onehot*numpy.log(self.probability)) / self.batch_size
+        return loss
+
+    def backward(self):
+        bottom_diff = (self.prob - self.label_onehot)/self.batch_size
+        return bottom_diff
