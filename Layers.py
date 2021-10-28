@@ -75,5 +75,5 @@ class LossLayer(object):
         return loss
 
     def backward(self):
-        bottom_diff = (self.prob - self.label_onehot)/self.batch_size
+        bottom_diff = (self.probability - self.label_onehot)/self.batch_size
         return bottom_diff
