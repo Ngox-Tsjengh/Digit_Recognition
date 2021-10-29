@@ -41,6 +41,33 @@ class Network(object):
         parameters['weight2'], parameters['bias2'] = self.FCL2.save_param()
         parameters['weight3'], parameters['bias3'] = self.FCL3.save_param()
 
+    def forward(self, input):
+        hid1 = self.FCL1.forward(input)
+        hid1 = self.ACTL1.forward(hid1)
+        hid2 = self.FCL2.forward(hid1)
+        hid2 = self.ACTL2.forward(hid2)
+        hid3 = self.FCL3.forward(hid2)
+        self.probability = self.loss.forward(hid3)
+        return self.probability
+
+    def backward(self):
+        dloss = self.loss.backward()
+        dhid2 = self.FCL3.backward(dloss)
+        dhid2 = self.ACTL2.backward(dhid2)
+        dhid1 = self.FCL2.backward(dhid2)
+        dhid1 = self.ACTL1.backward(dhid1)
+        dhid1 = self.FCL1.backward(dhid1)
+
+    def update(self, lr);
+        for layer in self.Layers_need_update:
+            layer.update_param(lr)
+
+    def train(self):
+
+    def evaluate(self):
+
+
+    def build_mnist_network():
 
 
 
