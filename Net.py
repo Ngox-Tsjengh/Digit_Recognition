@@ -63,6 +63,21 @@ class Network(object):
             layer.update_param(lr)
 
     def train(self):
+        batches = ceil(self.train_data.shape[0] / self.batch_size)
+        print('Starting training ... ')
+        for index_epoch in range(max_epoch):
+            self.shuffle_data()
+            for index_batch in range(batches):
+                # Deal with data
+                image_pixels = self.train_data[index_batch*self.batch_size:(index_batch+1)*self.batch_size, :-1]
+                image_labels = self.train_data[index_batch*self.batch_size:(index_batch+1)*self.batch_size, -1]
+                # train network
+                probability = self.forward(image_pixels)
+                loss = self.get_loss(image_labels)
+                self.backward()
+                # update parameter
+                self.update(self.lr)
+         print('Epoch %d, iteration %d, loss: %.6f' % (index_epoch, index_batch, loss))
 
     def evaluate(self):
 
