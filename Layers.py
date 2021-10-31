@@ -1,6 +1,5 @@
 import numpy
 
-
 class FullyConnectedLayer(object):
     def __init__(self, num_input, num_output):
     #Initilize the FullyConnectedLayer
@@ -11,12 +10,10 @@ class FullyConnectedLayer(object):
     def init_param(self, std=0.01):
     #Initilize parameters
         self.weight = numpy.random.normal(loc=0.0, scale=std, size=(self.num_input, self.num_output))
-        self.bias = np.zeros([1, self.num_output])
+        self.bias = numpy.zeros([1, self.num_output])
 
     def forward(self, input):
     #Forward propagation of FullyConnectedLayer
-        start_time = time.time()
-
         self.input = input
         output = numpy.dot(self.input, self.weight) + self.bias
         return output
@@ -46,16 +43,15 @@ class FullyConnectedLayer(object):
 
 class ActivationLayer(object):
     def forward(self, input):
-        start_time = time.time()
         self.input = input
-        output = numpy.maxium(self.input, 0)
+        output = numpy.maximum(self.input, 0)
         return output
 
     def backward(self, top_diff):
         Act = self.input
         Act[Act > 0] = 1
         Act[Act < 0] = 0
-        bottom_diff = numpy.multiply(b, top_diff)
+        bottom_diff = numpy.multiply(Act, top_diff)
         return bottom_diff
 
 class LossLayer(object):
@@ -64,8 +60,8 @@ class LossLayer(object):
         input_exp = numpy.exp(input - input_max)
         sum = numpy.sum(input_exp, axis = 1)
         all_sum = numpy.tile(sum, (10,1))
-        self.probability = input_exp / sum.T
-        return self
+        self.probability = input_exp / all_sum.T
+        return self.probability
 
     def get_loss(self, label):
         self.batch_size = self.probability.shape[0]
