@@ -19,44 +19,44 @@ class Network(object):
         self.lr = lr
         self.max_epoch = max_epoch
 
-    def load_mnist(self, file_dir, is_image = "True"):
+def load_mnist(self, file_dir, is_image = "True"):
 #Load MNIST data
-        # 1 Read binary data
-        file = open(file_dir, 'rb');
-        data = file.read()
-        file.close()
-        # 2 Decide file type due to header
-        if is_image: 
-            fmt_header = '>iiii'
-            magic, num_images, num_rows, num_cols = struct.unpack_from(fmt_header, data, 0)
-        else:       #read labels
-            fmt_header = '>ii'
-            magic, num_images = struct.unpack_from(fmt_header, data, 0)
-            num_rows, num_cols = 1, 1
-        data_size = num_images * num_rows * num_cols;
-        mat_data = struct.unpack_from('>' + str(data_size) + 'B', data, struct.calcsize(fmt_header))
-        mat_data = numpy.reshape(mat_data, [num_images, num_rows * num_cols])
-        print('Load images from %s, number: %d, data shape: %s' % (file_dir, num_images, str(mat_data.shape)))
+    # 1 Read binary data
+    file = open(file_dir, 'rb');
+    data = file.read()
+    file.close()
+    # 2 Decide file type due to header
+    if is_image: 
+        fmt_header = '>iiii'
+        magic, num_images, num_rows, num_cols = struct.unpack_from(fmt_header, data, 0)
+    else:       #read labels
+        fmt_header = '>ii'
+        magic, num_images = struct.unpack_from(fmt_header, data, 0)
+        num_rows, num_cols = 1, 1
+    data_size = num_images * num_rows * num_cols;
+    mat_data = struct.unpack_from('>' + str(data_size) + 'B', data, struct.calcsize(fmt_header))
+    mat_data = numpy.reshape(mat_data, [num_images, num_rows * num_cols])
+    print('Load images from %s, number: %d, data shape: %s' % (file_dir, num_images, str(mat_data.shape)))
 
-        return mat_data
+    return mat_data
 
 
-    def load_data(self):
+def load_data(self):
 #Load all data(images and labels) from MNIST files 
 # Read files and Append lables to images
-        print('Loading MNIST data')
-        train_images = self.load_mnist(os.path.join(MNIST_DIR, TRAIN_DATA), True)
-        train_labels = self.load_mnist(os.path.join(MNIST_DIR, TRAIN_LABEL), False)
-        self.train_data = numpy.append(train_images, train_labels, axis=1)
+    print('Loading MNIST data')
+    train_images = self.load_mnist(os.path.join(MNIST_DIR, TRAIN_DATA), True)
+    train_labels = self.load_mnist(os.path.join(MNIST_DIR, TRAIN_LABEL), False)
+    self.train_data = numpy.append(train_images, train_labels, axis=1)
 
-        test_images = self.load_mnist(os.path.join(MNIST_DIR, TEST_DATA), True)
-        test_labels = self.load_mnist(os.path.join(MNIST_DIR, TEST_LABEL), False)
-        self.test_data = numpy.append(test_images, test_labels, axis=1)
+    test_images = self.load_mnist(os.path.join(MNIST_DIR, TEST_DATA), True)
+    test_labels = self.load_mnist(os.path.join(MNIST_DIR, TEST_LABEL), False)
+    self.test_data = numpy.append(test_images, test_labels, axis=1)
 
-    def shuffle_data(self):
+def shuffle_data(self):
 #shuffle data for cross validation
-        print('Randomly shuffling data for cross validation ')
-        numpy.random.shuffle(self.train_data)
+    print('Randomly shuffling data for cross validation ')
+    numpy.random.shuffle(self.train_data)
 
     def build_model(self):
         print('Building Neural Network Structure ...')
